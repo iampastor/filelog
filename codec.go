@@ -42,7 +42,7 @@ func (w *LineEncoder) Reset(nw io.Writer) {
 }
 
 type Decoder interface {
-	ReadHeader() error
+	ReadHeader() (int, error)
 	ReadBody() (int, []byte, error)
 	Reset(r io.Reader)
 }
@@ -57,8 +57,8 @@ func NewLineDecoder() *LineDecoder {
 	}
 }
 
-func (r *LineDecoder) ReadHeader() error {
-	return nil
+func (r *LineDecoder) ReadHeader() (int, error) {
+	return 0, nil
 }
 
 func (r *LineDecoder) ReadBody() (int, []byte, error) {

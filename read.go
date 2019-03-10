@@ -179,11 +179,11 @@ func (r *Reader) readFile(fname string, handler ReadHandler) error {
 	r.codec.Reset(f)
 
 	for !r.isClosed() {
-		err := r.codec.ReadHeader()
+		hn, err := r.codec.ReadHeader()
 		if err != nil {
 			return errors.Wrapf(err, "read header %s", fname)
 		}
-		n, data, err := r.codec.ReadBody()
+		bn, data, err := r.codec.ReadBody()
 		if err != nil {
 			if err == io.EOF {
 				return nil
@@ -192,7 +192,7 @@ func (r *Reader) readFile(fname string, handler ReadHandler) error {
 			}
 		}
 		handler.HandleData(data, *r.metaData)
-		r.metaData.position += int64(n)
+		r.metaData.position += int64(hn + bn)
 		if err := r.metaData.write(); err != nil {
 			return errors.Wrap(err, "write metadata")
 		}
