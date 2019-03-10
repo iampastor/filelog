@@ -1,17 +1,49 @@
 package filelog
 
 import (
+	"bytes"
+	"encoding/gob"
+	"encoding/json"
 	"os"
 	"sync"
 	"testing"
+	"time"
 )
+
+type UserInfo struct {
+	Username string
+	Age      int
+	Birthday time.Time
+	Homepage string
+	Image    []byte
+}
 
 var data = make([]byte, 1024)
 
+var userInfo = &UserInfo{
+	Username: "iampastor",
+	Age:      12,
+	Birthday: time.Now(),
+	Homepage: "https://www.google.com",
+	Image:    make([]byte, 1024),
+}
+
 func Test_Writer(t *testing.T) {
 	w := NewWriter(".", "test")
+	data, _ := json.Marshal(userInfo)
+	for i := 0; i < 1; i++ {
+		w.Write(data)
+	}
+	w.Close()
+}
+
+func Test_BinaryWriter(t *testing.T) {
+	w := NewWriterWithEncoder(".", "test", NewBinaryEncoder())
+	var buf bytes.Buffer
+	encoder := gob.NewEncoder(&buf)
+	encoder.Encode(userInfo)
 	for i := 0; i < 10; i++ {
-		w.Write([]byte("test data"))
+		w.Write(buf.Bytes())
 	}
 	w.Close()
 }

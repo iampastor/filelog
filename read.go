@@ -152,11 +152,12 @@ func (r *Reader) Handle(handler ReadHandler) error {
 			r.metaData.filename = file
 			err := r.readFile(file, handler)
 			if err != nil {
-				return errors.Wrapf(err, "handle file: %s", file)
+				break
 			}
 			r.metaData.position = 0
 		}
 	}
+	r.metaData.close()
 	if r.isClosed() {
 		return io.ErrUnexpectedEOF
 	} else {
@@ -181,7 +182,11 @@ func (r *Reader) readFile(fname string, handler ReadHandler) error {
 	for !r.isClosed() {
 		hn, err := r.codec.ReadHeader()
 		if err != nil {
-			return errors.Wrapf(err, "read header %s", fname)
+			if err == io.EOF {
+				return nil
+			} else {
+				return errors.Wrapf(err, "read header %s", fname)
+			}
 		}
 		bn, data, err := r.codec.ReadBody()
 		if err != nil {
