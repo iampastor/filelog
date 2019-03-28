@@ -37,6 +37,16 @@ func Test_Writer(t *testing.T) {
 	w.Close()
 }
 
+func Test_SizeWriter(t *testing.T) {
+	w := NewSizeWriter(".", "sizetest", 1024)
+	data, _ := json.Marshal(userInfo)
+	for i := 0; i < 10; i++ {
+		w.Write(data)
+		time.Sleep(time.Second)
+	}
+	w.Close()
+}
+
 func Test_BinaryWriter(t *testing.T) {
 	w := NewWriterWithEncoder(".", "test", NewBinaryEncoder())
 	var buf bytes.Buffer

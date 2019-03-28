@@ -135,7 +135,7 @@ func (r *Reader) listFiles() ([]string, error) {
 }
 
 func (r *Reader) getFileNamePattern() string {
-	return fmt.Sprintf("%s_*.data", r.Name)
+	return fmt.Sprintf("%s*.log", r.Name)
 }
 
 func (r *Reader) getMetaDataFileName() string {
