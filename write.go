@@ -89,7 +89,7 @@ func (w *Writer) syncLoop(interval time.Duration) {
 
 func (l *Writer) rotate(filename string) error {
 	fpath := filepath.Join(l.Dir, filename)
-	fd, err := os.OpenFile(fpath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	fd, err := os.OpenFile(fpath, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return err
 	}

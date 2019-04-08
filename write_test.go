@@ -59,7 +59,7 @@ func Test_BinaryWriter(t *testing.T) {
 }
 
 func Benchmark_WriteNoLock(b *testing.B) {
-	f, err := os.OpenFile("/tmp/write_benchmark_nolock", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
+	f, err := os.OpenFile("/tmp/write_benchmark_nolock", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		b.Fatalf("open file %s", err.Error())
 	}
@@ -70,7 +70,7 @@ func Benchmark_WriteNoLock(b *testing.B) {
 }
 
 func Benchmark_WriteWithLock(b *testing.B) {
-	f, err := os.OpenFile("/tmp/write_benchmark_lock", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
+	f, err := os.OpenFile("/tmp/write_benchmark_lock", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		b.Fatalf("open file %s", err.Error())
 	}
@@ -84,7 +84,7 @@ func Benchmark_WriteWithLock(b *testing.B) {
 }
 
 func Benchmark_WriteWithSync(b *testing.B) {
-	f, err := os.OpenFile("/tmp/write_benchmark_sync", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
+	f, err := os.OpenFile("/tmp/write_benchmark_sync", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		b.Fatalf("open file %s", err.Error())
 	}
@@ -96,7 +96,7 @@ func Benchmark_WriteWithSync(b *testing.B) {
 }
 
 func Benchmark_WriteWithLockSync(b *testing.B) {
-	f, err := os.OpenFile("/tmp/write_benchmark_lock_sync", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0600)
+	f, err := os.OpenFile("/tmp/write_benchmark_lock_sync", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		b.Fatalf("open file %s", err.Error())
 	}
