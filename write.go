@@ -23,6 +23,7 @@ type Writer struct {
 	mu           sync.Mutex
 	codec        Encoder
 	rotateSize   bool
+	rotateHour   bool
 }
 
 func NewWriter(dir string, name string) *Writer {
@@ -53,12 +54,24 @@ func NewSizeWriterWithEncoder(dir string, name string, maxFilesize int64, codec 
 	return w
 }
 
+func NewHourWriter(dir string, name string) *Writer {
+	return NewHourWriterWithEncoder(dir, name, NewLineEncoder())
+}
+
+func NewHourWriterWithEncoder(dir string, name string, codec Encoder) *Writer {
+	w := NewWriterWithEncoder(dir, name, codec)
+	w.rotateHour = true
+	return w
+}
+
 func (l *Writer) Write(b []byte) (int, error) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	var err error
 	if l.rotateSize {
 		err = l.rotateBySize()
+	} else if l.rotateHour {
+		err = l.rorateByHour()
 	} else {
 		err = l.rotateByDay()
 	}
@@ -119,6 +132,14 @@ func (l *Writer) rotateByDay() error {
 	return nil
 }
 
+func (l *Writer) rorateByHour() error {
+	filename := l.getHourFilename()
+	if l.fd == nil || l.filename != filename {
+		return l.rotate(filename)
+	}
+	return nil
+}
+
 func (l *Writer) getDayFilename() string {
 	t := time.Now().Format("2006-01-02")
 	return fmt.Sprintf("%s%s.log", l.Name, t)
@@ -127,6 +148,11 @@ func (l *Writer) getDayFilename() string {
 func (l *Writer) getSizeFilename() string {
 	t := time.Now().Unix()
 	return fmt.Sprintf("%s%d.log", l.Name, t)
+}
+
+func (l *Writer) getHourFilename() string {
+	t := time.Now().Format("2006-01-02-15")
+	return fmt.Sprintf("%s%s.log", l.Name, t)
 }
 
 func (l *Writer) Close() error {

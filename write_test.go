@@ -46,7 +46,15 @@ func Test_SizeWriter(t *testing.T) {
 	}
 	w.Close()
 }
-
+func Test_HourWriter(t *testing.T) {
+	w := NewHourWriter(".", "hourtest")
+	data, _ := json.Marshal(userInfo)
+	for i := 0; i < 10; i++ {
+		w.Write(data)
+		time.Sleep(time.Second)
+	}
+	w.Close()
+}
 func Test_BinaryWriter(t *testing.T) {
 	w := NewWriterWithEncoder(".", "test", NewBinaryEncoder())
 	var buf bytes.Buffer
